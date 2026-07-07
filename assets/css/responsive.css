@@ -1,0 +1,143 @@
+@media(max-width:720px){
+  .page-shell{
+    padding:0;
+    align-items:stretch;
+  }
+
+  .simulator-card{
+    max-width:none;
+    min-height:100dvh;
+    border-radius:0;
+    border:0;
+    box-shadow:none;
+    padding:18px 20px 24px;
+  }
+
+  .brand-header{
+    gap:6px;
+    margin-bottom:12px;
+  }
+
+  .logo{
+    width:188px;
+    max-width:78%;
+  }
+
+  .brand-caption{
+    font-size:12px;
+  }
+
+  .progress{
+    margin-bottom:14px;
+  }
+
+  .step-body{
+    gap:18px;
+    padding-top:6px;
+    padding-bottom:2px;
+  }
+
+  .intro-body{
+    justify-content:center;
+    gap:24px;
+  }
+
+  h1{
+    font-size:31px;
+    line-height:1.18;
+  }
+
+  .lead{
+    font-size:14.5px;
+    line-height:1.66;
+  }
+
+  .info-card{
+    padding:15px 16px;
+  }
+
+  .option-grid{
+    gap:10px;
+  }
+
+  .option-card{
+    min-height:72px;
+  }
+
+  .button-row{
+    grid-template-columns:1fr;
+  }
+
+  .loading-card{
+    padding:22px 18px 18px;
+    border-radius:22px;
+  }
+
+  .loading-card-lg{
+    min-height:340px;
+  }
+
+  .loader-block{
+    width:102px;
+    height:102px;
+  }
+
+  .loader-ring{
+    width:102px;
+    height:102px;
+  }
+
+  .loading-feed{
+    height:140px;
+  }
+
+  .loading-feed-item.is-active{
+    top:68px;
+  }
+
+  .result-main span{
+    font-size:36px;
+  }
+
+  .compare{
+    grid-template-columns:1fr;
+  }
+
+  #resultado .step-body{
+    gap:12px;
+  }
+
+  .note-box{
+    font-size:12.6px;
+    line-height:1.5;
+  }
+
+  .disclaimer{
+    font-size:12px;
+    line-height:1.45;
+  }
+}
+
+@media(min-width:721px){
+  .step{
+    min-height:560px;
+  }
+}
+
+@media(max-height:760px) and (min-width:721px){
+  .simulator-card{
+    min-height:auto;
+  }
+
+  .step{
+    min-height:510px;
+  }
+
+  h1{
+    font-size:31px;
+  }
+
+  .loading-card-lg{
+    min-height:330px;
+  }
+}
