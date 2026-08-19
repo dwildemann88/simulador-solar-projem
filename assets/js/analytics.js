@@ -8,7 +8,8 @@ function analyticsGenerateLead(){
     valor_conta: state.conta,
     regiao: descobrirRegiao(),
     tipo_imovel: state.tipoTelhado,
-    ja_fez_orcamento: state.jaFezOrcamento
+    ja_fez_orcamento: state.jaFezOrcamento,
+    preferencia_atendimento: state.preferenciaAtendimento
   };
 
   track('generate_lead', payload);

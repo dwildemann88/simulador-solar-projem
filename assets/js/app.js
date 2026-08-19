@@ -41,7 +41,7 @@ function irStep3(){
   });
 
   show('step3');
-  bar(50);
+  bar(46);
 }
 
 function selectOrcamento(el, valor){
@@ -55,7 +55,7 @@ function selectOrcamento(el, valor){
 
   setTimeout(() => {
     show('step4');
-    bar(68);
+    bar(62);
   }, 180);
 }
 
@@ -79,6 +79,63 @@ function updateLoadingFeed(activeIndex){
   });
 }
 
+function createVisitaTecnicaStep(){
+  if(document.getElementById('step5')){
+    return;
+  }
+
+  const processando = document.getElementById('processando');
+
+  if(!processando){
+    return;
+  }
+
+  const step = document.createElement('section');
+  step.id = 'step5';
+  step.className = 'step hidden';
+  step.innerHTML = `
+    <div class="step-body">
+      <div class="step-copy">
+        <p class="eyebrow">Etapa 5 de 5</p>
+        <h1>Você aceita uma visita técnica?</h1>
+        <p class="lead">
+          A visita ajuda nossa equipe a conhecer o local da instalação, avaliar melhor a estrutura e dimensionar o projeto com mais precisão. Também conseguimos apresentar a proposta de forma mais completa.
+        </p>
+        <p class="step-tip">Se preferir, podemos continuar o atendimento à distância.</p>
+      </div>
+
+      <div class="option-grid">
+        <button class="option-card" type="button" onclick="selectVisitaTecnica(this,'Visita técnica')">
+          <span>Sim, podemos agendar uma visita</span>
+          <small>Quero avaliar o local e receber a proposta presencialmente</small>
+        </button>
+
+        <button class="option-card" type="button" onclick="selectVisitaTecnica(this,'WhatsApp')">
+          <span>Prefiro continuar pelo WhatsApp</span>
+          <small>Quero seguir com a análise e proposta por mensagem</small>
+        </button>
+
+        <button class="option-card" type="button" onclick="selectVisitaTecnica(this,'Ligação')">
+          <span>Prefiro conversar por ligação</span>
+          <small>Quero alinhar a análise e a proposta por telefone</small>
+        </button>
+      </div>
+    </div>
+  `;
+
+  processando.parentNode.insertBefore(step, processando);
+}
+
+function updateStepLabels(){
+  ['step1', 'step2', 'step3', 'step4'].forEach((id, index) => {
+    const eyebrow = document.querySelector(`#${id} .eyebrow`);
+
+    if(eyebrow){
+      eyebrow.innerText = `Etapa ${index + 1} de 5`;
+    }
+  });
+}
+
 function selectTelhado(el, valor){
   state.tipoTelhado = valor;
 
@@ -88,8 +145,29 @@ function selectTelhado(el, valor){
 
   setActiveCard('#step4 .option-card', el);
 
+  setTimeout(() => {
+    show('step5');
+    bar(78);
+  }, 180);
+}
+
+function selectVisitaTecnica(el, preferencia){
+  state.preferenciaAtendimento = preferencia;
+
+  track('step_visita_tecnica', {
+    preferencia_atendimento: preferencia
+  });
+
+  setActiveCard('#step5 .option-card', el);
+
+  setTimeout(() => {
+    iniciarProcessamento();
+  }, 180);
+}
+
+function iniciarProcessamento(){
   show('processando');
-  bar(82);
+  bar(86);
 
   const phases = [
     {
@@ -127,7 +205,7 @@ function selectTelhado(el, valor){
     clearInterval(interval);
     calcularResultado();
     show('preResultado');
-    bar(92);
+    bar(94);
   }, 2600);
 }
 
@@ -166,7 +244,6 @@ async function mostrarResultado(){
     return;
   }
 
-
   if(!isValidPhone(telefone)){
     showFieldError('Informe um WhatsApp válido com DDD.');
     return;
@@ -201,7 +278,6 @@ function isValidName(nome){
   return cleaned.length >= 3;
 }
 
-
 function isValidPhone(phone){
   if(phone.length < 10 || phone.length > 11) return false;
   if(/^(\d)\1+$/.test(phone)) return false;
@@ -213,6 +289,9 @@ function isValidPhone(phone){
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  createVisitaTecnicaStep();
+  updateStepLabels();
+
   const telefoneInput = document.getElementById('telefone');
 
   if(telefoneInput){
