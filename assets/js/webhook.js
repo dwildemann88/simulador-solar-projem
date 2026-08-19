@@ -30,6 +30,7 @@ async function enviarLeadMake(eventId){
 
           tipo_imovel: state.tipoTelhado,
           ja_fez_orcamento: state.jaFezOrcamento,
+          preferencia_atendimento: state.preferenciaAtendimento,
 
           economia: state.economia,
 
