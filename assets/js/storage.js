@@ -7,6 +7,7 @@ const state = {
 
   jaFezOrcamento: '',
   tipoTelhado: '',
+  preferenciaAtendimento: '',
 
   economia: 0,
   novaConta: 0,
