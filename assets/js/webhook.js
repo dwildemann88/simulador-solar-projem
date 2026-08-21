@@ -5,9 +5,28 @@ const ISALES_CONFIG = {
   iframeName: 'isales_crm_iframe'
 };
 
+let leadSubmissionPromise = null;
+let leadConversionTracked = false;
+
 async function salvarLead(eventId){
-  enviarLeadIsales();
-  return await enviarLeadMake(eventId);
+  if(leadSubmissionPromise){
+    return leadSubmissionPromise;
+  }
+
+  leadSubmissionPromise = (async () => {
+    enviarLeadIsales();
+
+    const leadCriado = await enviarLeadMake(eventId);
+
+    if(leadCriado && !leadConversionTracked){
+      analyticsConfirmLead(eventId);
+      leadConversionTracked = true;
+    }
+
+    return leadCriado;
+  })();
+
+  return leadSubmissionPromise;
 }
 
 async function enviarLeadMake(eventId){
@@ -66,6 +85,7 @@ async function enviarLeadMake(eventId){
   }
   catch(error){
     console.error('Erro ao enviar lead para Make:', error);
+    leadSubmissionPromise = null;
     return false;
   }
 }
