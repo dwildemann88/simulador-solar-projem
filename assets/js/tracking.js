@@ -50,6 +50,24 @@ function trackMetaLead(eventId, data = {}){
   console.log('META PIXEL: Lead', { event_id: eventId, ...data });
 }
 
+function getCookieValue(name){
+  const prefix = `${name}=`;
+  const cookie = document.cookie
+    .split(';')
+    .map(item => item.trim())
+    .find(item => item.startsWith(prefix));
+
+  return cookie ? decodeURIComponent(cookie.slice(prefix.length)) : '';
+}
+
+function getMetaAttribution(){
+  return {
+    fbclid: state && state.utm ? state.utm.fbclid : '',
+    fbp: getCookieValue('_fbp'),
+    fbc: getCookieValue('_fbc')
+  };
+}
+
 function gerarEventId(){
   if(window.crypto && typeof window.crypto.randomUUID === 'function'){
     return window.crypto.randomUUID();
