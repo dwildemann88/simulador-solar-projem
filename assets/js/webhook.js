@@ -7,12 +7,16 @@ const ISALES_CONFIG = {
 
 async function salvarLead(eventId){
   enviarLeadIsales();
-  await enviarLeadMake(eventId);
+  return await enviarLeadMake(eventId);
 }
 
 async function enviarLeadMake(eventId){
   try{
-    await fetch(
+    const metaAttribution = typeof getMetaAttribution === 'function'
+      ? getMetaAttribution()
+      : { fbclid: state.utm.fbclid || '', fbp: '', fbc: '' };
+
+    const response = await fetch(
       'https://hook.us2.make.com/rdfwi4qnt2vwdv7tva24wm7cntew99yi',
       {
         method:'POST',
@@ -40,6 +44,9 @@ async function enviarLeadMake(eventId){
           gclid: state.utm.gclid,
           gbraid: state.utm.gbraid,
           wbraid: state.utm.wbraid,
+          fbclid: metaAttribution.fbclid,
+          fbp: metaAttribution.fbp,
+          fbc: metaAttribution.fbc,
 
           utm_source: state.utm.source,
           utm_medium: state.utm.medium,
@@ -50,10 +57,16 @@ async function enviarLeadMake(eventId){
       }
     );
 
-    console.log('Lead enviado para Make');
+    if(!response.ok){
+      throw new Error(`Make respondeu com HTTP ${response.status}`);
+    }
+
+    console.log('Lead confirmado pelo Make');
+    return true;
   }
   catch(error){
     console.error('Erro ao enviar lead para Make:', error);
+    return false;
   }
 }
 
