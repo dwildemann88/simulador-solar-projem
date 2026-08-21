@@ -1,4 +1,8 @@
-function analyticsGenerateLead(eventId){
+function analyticsGenerateLead(){
+  return gerarEventId();
+}
+
+function analyticsConfirmLead(eventId){
   const commonData = {
     event_id: eventId,
     valor_conta: state.conta,
