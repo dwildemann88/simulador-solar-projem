@@ -1,20 +1,34 @@
 function analyticsGenerateLead(){
-  const eventId = gerarEventId();
+  return gerarEventId();
+}
 
-  const payload = {
+function analyticsConfirmLead(eventId){
+  const commonData = {
     event_id: eventId,
-    value: Number(state.economia.toFixed(2)),
-    currency: 'BRL',
     valor_conta: state.conta,
     regiao: descobrirRegiao(),
     tipo_imovel: state.tipoTelhado,
     ja_fez_orcamento: state.jaFezOrcamento,
-    preferencia_atendimento: state.preferenciaAtendimento
+    preferencia_atendimento: state.preferenciaAtendimento,
+    origem: 'simulador_solar'
   };
 
-  track('generate_lead', payload);
+  track('generate_lead', {
+    ...commonData,
+    value: Number(state.economia.toFixed(2)),
+    currency: 'BRL'
+  });
 
-  return eventId;
+  trackMetaLead(eventId, {
+    content_name: 'Simulador Solar',
+    content_category: 'Energia Solar',
+    valor_conta: state.conta,
+    regiao: descobrirRegiao(),
+    tipo_imovel: state.tipoTelhado,
+    ja_fez_orcamento: state.jaFezOrcamento,
+    preferencia_atendimento: state.preferenciaAtendimento,
+    origem: 'simulador_solar'
+  });
 }
 
 function descobrirRegiao(){
