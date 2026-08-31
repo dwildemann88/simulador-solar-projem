@@ -6,6 +6,23 @@ function bar(value){
   }
 }
 
+function trackVisibleStep(id){
+  const map = {
+    step1: [1, 'bill_range'],
+    step2: [2, 'city'],
+    step3: [3, 'property_type'],
+    step4: [4, 'purchase_timing']
+  };
+
+  if(map[id] && typeof trackStepView === 'function'){
+    trackStepView(map[id][0], map[id][1]);
+  }
+
+  if(id === 'preResultado' && typeof trackContactView === 'function'){
+    trackContactView();
+  }
+}
+
 function show(id){
   document.querySelectorAll('.step').forEach(step => {
     step.classList.add('hidden');
@@ -17,6 +34,7 @@ function show(id){
   if(nextStep){
     nextStep.classList.remove('hidden');
     nextStep.classList.add('is-active');
+    trackVisibleStep(id);
   }
 }
 
@@ -34,9 +52,12 @@ function showFieldError(message){
   const error = document.createElement('div');
   error.className = 'error-message';
   error.id = 'fieldError';
+  error.setAttribute('role', 'alert');
   error.innerText = message;
 
   const activeStep = document.querySelector('.step:not(.hidden)');
+  if(!activeStep) return;
+
   activeStep.appendChild(error);
   activeStep.classList.remove('is-shaking');
   void activeStep.offsetWidth;
