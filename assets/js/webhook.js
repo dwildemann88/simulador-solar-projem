@@ -53,13 +53,15 @@ async function enviarLeadMake(eventId){
           'Content-Type':'application/json'
         },
         body:JSON.stringify({
-          // Campos existentes preservados.
+          // Contrato legado preservado.
           nome: state.nome,
           telefone: state.telefone,
           cidade_digitada: state.cidade,
           regiao: descobrirRegiao(),
           conta: state.conta,
-          tipo_imovel: state.tipoImovel || state.tipoTelhado,
+          // Historicamente este campo recebia o tipo de cobertura/telhado.
+          // Não alteramos silenciosamente sua semântica.
+          tipo_imovel: state.tipoTelhado,
           ja_fez_orcamento: state.jaFezOrcamento,
           preferencia_atendimento: state.preferenciaAtendimento,
           economia: state.economia,
@@ -80,6 +82,7 @@ async function enviarLeadMake(eventId){
           // Campos novos, aditivos e retrocompatíveis.
           lead_id: state.leadId,
           timestamp: state.createdAt,
+          tipo_imovel_perfil: state.tipoImovel,
           prazo_compra: state.prazoCompra,
           resultado_estimado: state.resultadoEstimado,
           qualificacao: state.qualificacao,
