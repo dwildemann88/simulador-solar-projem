@@ -1,23 +1,27 @@
 function calcularResultado(){
-  let percentual = 0.72 + (Math.random() * 0.16);
+  const valorConta = Number(state.conta || 0);
 
-  if(state.tipoTelhado === 'Fibrocimento'){
-    percentual += 0.03;
+  let qualificacao = 'Potencial a confirmar';
+
+  if(valorConta >= 1000){
+    qualificacao = 'Alto potencial para análise';
+  }
+  else if(valorConta >= 650){
+    qualificacao = 'Bom potencial para análise';
+  }
+  else if(valorConta > 0){
+    qualificacao = 'Potencial inicial para análise';
   }
 
-  if(state.tipoTelhado === 'Laje'){
-    percentual -= 0.04;
-  }
+  state.qualificacao = qualificacao;
+  state.resultadoEstimado = qualificacao;
 
-  if(state.jaFezOrcamento === 'Sim'){
-    percentual -= 0.03;
-  }
-
-  percentual = Math.min(0.90, Math.max(0.68, percentual));
-
-  state.economia = state.conta * percentual;
-  state.novaConta = state.conta - state.economia;
-  state.total10Anos = state.conta * 120;
+  // O valor médio da conta, isoladamente, não permite estimar com rigor
+  // economia percentual, nova conta ou investimento. Esses campos legados
+  // permanecem zerados por retrocompatibilidade com integrações existentes.
+  state.economia = 0;
+  state.novaConta = 0;
+  state.total10Anos = 0;
 }
 
 function formatCurrency(value){
