@@ -7,6 +7,7 @@ const ISALES_CONFIG = {
 
 let leadSubmissionPromise = null;
 let leadConversionTracked = false;
+let isalesSubmissionSent = false;
 
 async function salvarLead(eventId){
   if(leadSubmissionPromise){
@@ -14,7 +15,10 @@ async function salvarLead(eventId){
   }
 
   leadSubmissionPromise = (async () => {
-    enviarLeadIsales();
+    if(!isalesSubmissionSent){
+      enviarLeadIsales();
+      isalesSubmissionSent = true;
+    }
 
     const leadCriado = await enviarLeadMake(eventId);
 
@@ -26,7 +30,13 @@ async function salvarLead(eventId){
     return leadCriado;
   })();
 
-  return leadSubmissionPromise;
+  const result = await leadSubmissionPromise;
+
+  if(!result){
+    leadSubmissionPromise = null;
+  }
+
+  return result;
 }
 
 async function enviarLeadMake(eventId){
@@ -43,35 +53,41 @@ async function enviarLeadMake(eventId){
           'Content-Type':'application/json'
         },
         body:JSON.stringify({
+          // Contrato legado preservado.
           nome: state.nome,
           telefone: state.telefone,
-
           cidade_digitada: state.cidade,
           regiao: descobrirRegiao(),
-
           conta: state.conta,
-
+          // Historicamente este campo recebia o tipo de cobertura/telhado.
+          // Não alteramos silenciosamente sua semântica.
           tipo_imovel: state.tipoTelhado,
           ja_fez_orcamento: state.jaFezOrcamento,
           preferencia_atendimento: state.preferenciaAtendimento,
-
           economia: state.economia,
-
           event_id: eventId,
           origem:'simulador_solar',
-
           gclid: state.utm.gclid,
           gbraid: state.utm.gbraid,
           wbraid: state.utm.wbraid,
           fbclid: metaAttribution.fbclid,
           fbp: metaAttribution.fbp,
           fbc: metaAttribution.fbc,
-
           utm_source: state.utm.source,
           utm_medium: state.utm.medium,
           utm_campaign: state.utm.campaign,
           utm_content: state.utm.content,
-          utm_term: state.utm.term
+          utm_term: state.utm.term,
+
+          // Campos novos, aditivos e retrocompatíveis.
+          lead_id: state.leadId,
+          timestamp: state.createdAt,
+          tipo_imovel_perfil: state.tipoImovel,
+          prazo_compra: state.prazoCompra,
+          resultado_estimado: state.resultadoEstimado,
+          qualificacao: state.qualificacao,
+          whatsapp_clicked: state.whatsappClicked,
+          experiment_variant: 'qualified_v2'
         })
       }
     );
@@ -85,7 +101,6 @@ async function enviarLeadMake(eventId){
   }
   catch(error){
     console.error('Erro ao enviar lead para Make:', error);
-    leadSubmissionPromise = null;
     return false;
   }
 }
@@ -130,13 +145,14 @@ function enviarLeadIsales(){
 
     track('isales_lead_submit', {
       valor_conta: state.conta,
-      cidade: cidade
+      city_region_category: descobrirRegiao()
     });
 
     console.log('Lead enviado para iSales');
   }
   catch(error){
     console.error('Erro ao enviar lead para iSales:', error);
+    isalesSubmissionSent = false;
   }
 }
 

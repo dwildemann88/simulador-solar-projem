@@ -1,21 +1,24 @@
 function analyticsGenerateLead(){
-  return gerarEventId();
+  const eventId = gerarEventId();
+  state.eventId = eventId;
+  return eventId;
 }
 
 function analyticsConfirmLead(eventId){
   const commonData = {
     event_id: eventId,
+    lead_id: state.leadId,
     valor_conta: state.conta,
     regiao: descobrirRegiao(),
-    tipo_imovel: state.tipoTelhado,
-    ja_fez_orcamento: state.jaFezOrcamento,
+    tipo_imovel: state.tipoImovel,
+    prazo_compra: state.prazoCompra,
     preferencia_atendimento: state.preferenciaAtendimento,
     origem: 'simulador_solar'
   };
 
   track('generate_lead', {
     ...commonData,
-    value: Number(state.economia.toFixed(2)),
+    value: 1,
     currency: 'BRL'
   });
 
@@ -24,8 +27,8 @@ function analyticsConfirmLead(eventId){
     content_category: 'Energia Solar',
     valor_conta: state.conta,
     regiao: descobrirRegiao(),
-    tipo_imovel: state.tipoTelhado,
-    ja_fez_orcamento: state.jaFezOrcamento,
+    tipo_imovel: state.tipoImovel,
+    prazo_compra: state.prazoCompra,
     preferencia_atendimento: state.preferenciaAtendimento,
     origem: 'simulador_solar'
   });
@@ -35,7 +38,10 @@ function descobrirRegiao(){
   const santaRosa = [
     'Santa Rosa',
     'Giruá',
-    'Senador Salgado Filho'
+    'Senador Salgado Filho',
+    'Três de Maio',
+    'Horizontina',
+    'Santo Cristo'
   ];
 
   const missoes = [

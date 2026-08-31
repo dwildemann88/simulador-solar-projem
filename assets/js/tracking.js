@@ -1,6 +1,7 @@
 window.dataLayer = window.dataLayer || [];
 
 const META_PIXEL_ID = '1678481836973630';
+const trackedOnce = new Set();
 
 (function initMetaPixel(f,b,e,v,n,t,s){
   if(f.fbq) return;
@@ -26,12 +27,100 @@ fbq('init', META_PIXEL_ID);
 fbq('track', 'PageView');
 
 function track(eventName, data = {}){
-  window.dataLayer.push({
-    event: eventName,
-    ...data
-  });
+  try{
+    window.dataLayer.push({
+      event: eventName,
+      ...data
+    });
 
-  console.log('TRACK:', eventName, data);
+    console.log('TRACK:', eventName, data);
+  }
+  catch(error){
+    console.warn('Falha não bloqueante no tracking:', error);
+  }
+}
+
+function trackOnce(eventName, data = {}, uniqueKey = eventName){
+  if(trackedOnce.has(uniqueKey)) return;
+  trackedOnce.add(uniqueKey);
+  track(eventName, data);
+}
+
+function getTrafficSource(){
+  return state.utm.source || (state.utm.gclid ? 'google_ads' : 'direct_or_unknown');
+}
+
+function getAnalyticsContext(){
+  return {
+    lead_id: state.leadId,
+    traffic_source: getTrafficSource(),
+    experiment_variant: 'qualified_v2'
+  };
+}
+
+function trackSimulatorView(){
+  trackOnce('solar_simulator_view', getAnalyticsContext());
+}
+
+function trackSimulatorStart(){
+  trackOnce('solar_simulator_start', getAnalyticsContext());
+}
+
+function trackStepView(stepNumber, stepName){
+  trackOnce(
+    'solar_simulator_step_view',
+    {
+      ...getAnalyticsContext(),
+      step_number: stepNumber,
+      step_name: stepName
+    },
+    `step_view_${stepNumber}_${stepName}`
+  );
+}
+
+function trackStepComplete(stepNumber, stepName, parameters = {}){
+  trackOnce(
+    'solar_simulator_step_complete',
+    {
+      ...getAnalyticsContext(),
+      step_number: stepNumber,
+      step_name: stepName,
+      ...parameters
+    },
+    `step_complete_${stepNumber}_${stepName}`
+  );
+}
+
+function trackContactView(){
+  trackOnce('solar_simulator_contact_view', getAnalyticsContext());
+}
+
+function trackContactComplete(){
+  trackOnce('solar_simulator_contact_complete', getAnalyticsContext());
+}
+
+function trackResultPreview(){
+  trackOnce('solar_simulator_result_preview', {
+    ...getAnalyticsContext(),
+    bill_range: state.conta,
+    property_type: state.tipoImovel,
+    purchase_timing: state.prazoCompra,
+    city_region_category: typeof descobrirRegiao === 'function' ? descobrirRegiao() : 'Outras regiões'
+  });
+}
+
+function trackSimulatorComplete(){
+  trackOnce('solar_simulator_complete', getAnalyticsContext());
+}
+
+function trackWhatsappClick(){
+  trackOnce('solar_simulator_whatsapp_click', {
+    ...getAnalyticsContext(),
+    bill_range: state.conta,
+    property_type: state.tipoImovel,
+    purchase_timing: state.prazoCompra,
+    city_region_category: typeof descobrirRegiao === 'function' ? descobrirRegiao() : 'Outras regiões'
+  });
 }
 
 function trackMetaLead(eventId, data = {}){
