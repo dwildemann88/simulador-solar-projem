@@ -4,6 +4,12 @@ function startSimulator(){
   bar(16);
 }
 
+function goBack(stepId, progress){
+  clearFieldError();
+  show(stepId);
+  bar(progress);
+}
+
 function getCidadeDigitada(){
   const cidadeInput = document.getElementById('cidade') || document.getElementById('cidade_input');
   return cidadeInput ? cidadeInput.value.trim().replace(/\s+/g, ' ') : '';
