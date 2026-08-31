@@ -1,7 +1,7 @@
 function startSimulator(){
-  track('simulator_start_click');
+  trackSimulatorStart();
   show('step1');
-  bar(12);
+  bar(16);
 }
 
 function getCidadeDigitada(){
@@ -11,16 +11,15 @@ function getCidadeDigitada(){
 
 function selectConta(el, valor){
   state.conta = valor;
-
-  track('form_start', {
-    valor_conta: valor
-  });
-
   setActiveCard('#step1 .option-card', el);
+
+  trackStepComplete(1, 'bill_range', {
+    bill_range: valor
+  });
 
   setTimeout(() => {
     show('step2');
-    bar(30);
+    bar(32);
   }, 180);
 }
 
@@ -36,37 +35,50 @@ function irStep3(){
 
   state.cidade = cidade;
 
-  track('step_city', {
-    cidade: cidade
+  trackStepComplete(2, 'city', {
+    city_region_category: descobrirRegiao()
   });
 
   show('step3');
-  bar(46);
+  bar(48);
 }
 
-function selectOrcamento(el, valor){
-  state.jaFezOrcamento = valor;
-
-  track('step_orcamento', {
-    status: valor
-  });
-
+function selectTipoImovel(el, valor){
+  state.tipoImovel = valor;
   setActiveCard('#step3 .option-card', el);
+
+  trackStepComplete(3, 'property_type', {
+    property_type: valor
+  });
 
   setTimeout(() => {
     show('step4');
-    bar(62);
+    bar(64);
+  }, 180);
+}
+
+function selectPrazoCompra(el, valor){
+  state.prazoCompra = valor;
+  setActiveCard('#step4 .option-card', el);
+
+  trackStepComplete(4, 'purchase_timing', {
+    purchase_timing: valor
+  });
+
+  setTimeout(() => {
+    iniciarProcessamento();
   }, 180);
 }
 
 function updateLoadingFeed(activeIndex){
   const items = [
     document.getElementById('loading-feed-1'),
-    document.getElementById('loading-feed-2'),
-    document.getElementById('loading-feed-3')
+    document.getElementById('loading-feed-2')
   ];
 
   items.forEach((item, index) => {
+    if(!item) return;
+
     item.classList.remove('is-top', 'is-active', 'is-hidden');
 
     if(index < activeIndex){
@@ -79,161 +91,26 @@ function updateLoadingFeed(activeIndex){
   });
 }
 
-function createVisitaTecnicaStep(){
-  if(document.getElementById('step5')){
-    return;
-  }
-
-  const processando = document.getElementById('processando');
-
-  if(!processando){
-    return;
-  }
-
-  const step = document.createElement('section');
-  step.id = 'step5';
-  step.className = 'step hidden';
-  step.innerHTML = `
-    <div class="step-body">
-      <div class="step-copy">
-        <p class="eyebrow">Etapa 5 de 5</p>
-        <h1>Você aceita uma visita técnica?</h1>
-        <p class="lead">
-          A visita ajuda nossa equipe a conhecer o local da instalação, avaliar melhor a estrutura e dimensionar o projeto com mais precisão. Também conseguimos apresentar a proposta de forma mais completa.
-        </p>
-        <p class="step-tip">Se preferir, podemos continuar o atendimento à distância.</p>
-      </div>
-
-      <div class="option-grid">
-        <button class="option-card" type="button" onclick="selectVisitaTecnica(this,'Visita técnica')">
-          <span>Sim, podemos agendar uma visita</span>
-          <small>Quero avaliar o local e receber a proposta presencialmente</small>
-        </button>
-
-        <button class="option-card" type="button" onclick="selectVisitaTecnica(this,'WhatsApp')">
-          <span>Prefiro continuar pelo WhatsApp</span>
-          <small>Quero seguir com a análise e proposta por mensagem</small>
-        </button>
-
-        <button class="option-card" type="button" onclick="selectVisitaTecnica(this,'Ligação')">
-          <span>Prefiro conversar por ligação</span>
-          <small>Quero alinhar a análise e a proposta por telefone</small>
-        </button>
-      </div>
-    </div>
-  `;
-
-  processando.parentNode.insertBefore(step, processando);
-}
-
-function updateStepLabels(){
-  ['step1', 'step2', 'step3', 'step4'].forEach((id, index) => {
-    const eyebrow = document.querySelector(`#${id} .eyebrow`);
-
-    if(eyebrow){
-      eyebrow.innerText = `Etapa ${index + 1} de 5`;
-    }
-  });
-}
-
-function selectTelhado(el, valor){
-  state.tipoTelhado = valor;
-
-  track('step_telhado', {
-    telhado: valor
-  });
-
-  setActiveCard('#step4 .option-card', el);
-
-  setTimeout(() => {
-    show('step5');
-    bar(78);
-  }, 180);
-}
-
-function selectVisitaTecnica(el, preferencia){
-  state.preferenciaAtendimento = preferencia;
-
-  track('step_visita_tecnica', {
-    preferencia_atendimento: preferencia
-  });
-
-  setActiveCard('#step5 .option-card', el);
-
-  setTimeout(() => {
-    iniciarProcessamento();
-  }, 180);
-}
-
 function iniciarProcessamento(){
   show('processando');
-  bar(86);
+  bar(78);
 
-  const phases = [
-    {
-      title: 'Montando sua estimativa',
-      sub: 'Estamos organizando os dados da sua simulação.',
-      feedIndex: 0
-    },
-    {
-      title: 'Conferindo sua região',
-      sub: 'Usando a cidade informada para ajustar a análise.',
-      feedIndex: 1
-    },
-    {
-      title: 'Refinando o resultado',
-      sub: 'Considerando o perfil de telhado e a faixa de economia.',
-      feedIndex: 2
-    }
-  ];
-
-  let index = 0;
-  document.getElementById('loadingTitle').innerText = phases[0].title;
-  document.getElementById('loadingSub').innerText = phases[0].sub;
-  updateLoadingFeed(phases[0].feedIndex);
-
-  const interval = setInterval(() => {
-    index++;
-    if(index < phases.length){
-      document.getElementById('loadingTitle').innerText = phases[index].title;
-      document.getElementById('loadingSub').innerText = phases[index].sub;
-      updateLoadingFeed(phases[index].feedIndex);
-    }
-  }, 820);
+  document.getElementById('loadingTitle').innerText = 'Calculando sua estimativa';
+  document.getElementById('loadingSub').innerText = 'Organizando as informações da sua simulação.';
+  updateLoadingFeed(0);
 
   setTimeout(() => {
-    clearInterval(interval);
+    updateLoadingFeed(1);
+  }, 650);
+
+  setTimeout(() => {
     calcularResultado();
     show('preResultado');
-    bar(94);
-  }, 2600);
+    bar(88);
+  }, 1250);
 }
 
-function animateCurrencyValue(elementId, finalValue, duration = 1200){
-  const element = document.getElementById(elementId);
-  if(!element) return;
-
-  const startTime = performance.now();
-
-  function step(currentTime){
-    const elapsed = currentTime - startTime;
-    const progress = Math.min(elapsed / duration, 1);
-    const eased = 1 - Math.pow(1 - progress, 3);
-    const currentValue = finalValue * eased;
-
-    element.innerText = formatCurrency(currentValue);
-
-    if(progress < 1){
-      requestAnimationFrame(step);
-    } else {
-      element.innerText = formatCurrency(finalValue);
-    }
-  }
-
-  requestAnimationFrame(step);
-}
-
-async function mostrarResultado(){
+async function mostrarResultado(buttonElement){
   clearFieldError();
 
   const nome = document.getElementById('nome').value.trim().replace(/\s+/g, ' ');
@@ -253,24 +130,38 @@ async function mostrarResultado(){
   state.telefone = telefone;
   state.cidade = getCidadeDigitada() || state.cidade;
 
-  const eventId = analyticsGenerateLead();
-  salvarLead(eventId);
+  const submitButton = buttonElement || document.getElementById('contactSubmit');
+  const originalLabel = submitButton ? submitButton.innerHTML : '';
 
-  document.getElementById('economia').innerText = formatCurrency(0);
-  document.getElementById('contaAtual').innerText = formatCurrency(0);
-  document.getElementById('novaConta').innerText = formatCurrency(0);
+  if(submitButton){
+    submitButton.disabled = true;
+    submitButton.innerHTML = '<span>Confirmando dados...</span>';
+  }
 
-  // Exceção solicitada: o valor de 10 anos aparece direto, sem contador.
-  document.getElementById('total').innerText = formatCurrency(state.total10Anos);
+  const eventId = state.eventId || analyticsGenerateLead();
+  const leadCriado = await salvarLead(eventId);
+
+  if(!leadCriado){
+    if(submitButton){
+      submitButton.disabled = false;
+      submitButton.innerHTML = originalLabel;
+    }
+
+    showFieldError('Não conseguimos confirmar o envio. Tente novamente.');
+    return;
+  }
+
+  trackContactComplete();
+
+  document.getElementById('resultadoStatus').innerText = state.qualificacao;
+  document.getElementById('resultadoConta').innerText = formatCurrency(state.conta);
+  document.getElementById('resultadoPerfil').innerText = state.tipoImovel;
+  document.getElementById('resultadoPrazo').innerText = state.prazoCompra;
 
   show('resultado');
   bar(100);
-
-  setTimeout(() => {
-    animateCurrencyValue('economia', state.economia, 1400);
-    animateCurrencyValue('contaAtual', state.conta, 1100);
-    animateCurrencyValue('novaConta', state.novaConta, 1250);
-  }, 120);
+  trackResultPreview();
+  trackSimulatorComplete();
 }
 
 function isValidName(nome){
@@ -289,8 +180,7 @@ function isValidPhone(phone){
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  createVisitaTecnicaStep();
-  updateStepLabels();
+  trackSimulatorView();
 
   const telefoneInput = document.getElementById('telefone');
 
