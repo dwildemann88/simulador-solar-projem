@@ -1,17 +1,53 @@
+function createLeadId(){
+  if(window.crypto && typeof window.crypto.randomUUID === 'function'){
+    return window.crypto.randomUUID();
+  }
+
+  return `lead_${Date.now().toString(36)}_${Math.random().toString(36).slice(2,10)}`;
+}
+
+function getOrCreateLeadId(){
+  const storageKey = 'projem_solar_lead_id';
+
+  try{
+    const existing = sessionStorage.getItem(storageKey);
+    if(existing) return existing;
+
+    const created = createLeadId();
+    sessionStorage.setItem(storageKey, created);
+    return created;
+  }
+  catch(error){
+    console.warn('sessionStorage indisponível para lead_id:', error);
+    return createLeadId();
+  }
+}
+
 const state = {
+  leadId: getOrCreateLeadId(),
+  eventId: '',
+  createdAt: new Date().toISOString(),
+
   conta: 0,
   cidade: '',
+  tipoImovel: '',
+  prazoCompra: '',
 
   nome: '',
   telefone: '',
 
+  // Campos legados preservados para manter compatibilidade com integrações atuais.
   jaFezOrcamento: '',
   tipoTelhado: '',
-  preferenciaAtendimento: '',
+  preferenciaAtendimento: 'WhatsApp',
 
+  // Não são preenchidos com números estimados sem base técnica suficiente.
   economia: 0,
   novaConta: 0,
   total10Anos: 0,
+  resultadoEstimado: '',
+  qualificacao: '',
+  whatsappClicked: false,
 
   utm: {
     gclid: '',
