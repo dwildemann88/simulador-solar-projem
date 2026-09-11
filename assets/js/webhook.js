@@ -45,6 +45,45 @@ async function enviarLeadMake(eventId){
       ? getMetaAttribution()
       : { fbclid: state.utm.fbclid || '', fbp: '', fbc: '' };
 
+    const payload = {
+      nome: state.nome,
+      telefone: state.telefone,
+      cidade_digitada: state.cidade,
+      regiao: descobrirRegiao(),
+      conta: state.conta,
+
+      // Campo correto para a etapa atual.
+      tipo_telhado: state.tipoTelhado,
+
+      // Alias legado: historicamente tipo_imovel já carregava o tipo de cobertura/telhado.
+      // Mantido temporariamente para não quebrar cenários do Make que ainda dependam dele.
+      tipo_imovel: state.tipoTelhado,
+
+      ja_fez_orcamento: state.jaFezOrcamento,
+      preferencia_atendimento: state.preferenciaAtendimento,
+      economia: state.economia,
+      event_id: eventId,
+      origem:'simulador_solar',
+      gclid: state.utm.gclid,
+      gbraid: state.utm.gbraid,
+      wbraid: state.utm.wbraid,
+      fbclid: metaAttribution.fbclid,
+      fbp: metaAttribution.fbp,
+      fbc: metaAttribution.fbc,
+      utm_source: state.utm.source,
+      utm_medium: state.utm.medium,
+      utm_campaign: state.utm.campaign,
+      utm_content: state.utm.content,
+      utm_term: state.utm.term,
+      lead_id: state.leadId,
+      timestamp: state.createdAt,
+      prazo_compra: state.prazoCompra,
+      resultado_estimado: state.resultadoEstimado,
+      qualificacao: state.qualificacao,
+      whatsapp_clicked: state.whatsappClicked,
+      experiment_variant: 'qualified_v2'
+    };
+
     const response = await fetch(
       'https://hook.us2.make.com/rdfwi4qnt2vwdv7tva24wm7cntew99yi',
       {
@@ -52,43 +91,7 @@ async function enviarLeadMake(eventId){
         headers:{
           'Content-Type':'application/json'
         },
-        body:JSON.stringify({
-          // Contrato legado preservado.
-          nome: state.nome,
-          telefone: state.telefone,
-          cidade_digitada: state.cidade,
-          regiao: descobrirRegiao(),
-          conta: state.conta,
-          // Historicamente este campo recebia o tipo de cobertura/telhado.
-          // Não alteramos silenciosamente sua semântica.
-          tipo_imovel: state.tipoTelhado,
-          ja_fez_orcamento: state.jaFezOrcamento,
-          preferencia_atendimento: state.preferenciaAtendimento,
-          economia: state.economia,
-          event_id: eventId,
-          origem:'simulador_solar',
-          gclid: state.utm.gclid,
-          gbraid: state.utm.gbraid,
-          wbraid: state.utm.wbraid,
-          fbclid: metaAttribution.fbclid,
-          fbp: metaAttribution.fbp,
-          fbc: metaAttribution.fbc,
-          utm_source: state.utm.source,
-          utm_medium: state.utm.medium,
-          utm_campaign: state.utm.campaign,
-          utm_content: state.utm.content,
-          utm_term: state.utm.term,
-
-          // Campos novos, aditivos e retrocompatíveis.
-          lead_id: state.leadId,
-          timestamp: state.createdAt,
-          tipo_imovel_perfil: state.tipoImovel,
-          prazo_compra: state.prazoCompra,
-          resultado_estimado: state.resultadoEstimado,
-          qualificacao: state.qualificacao,
-          whatsapp_clicked: state.whatsappClicked,
-          experiment_variant: 'qualified_v2'
-        })
+        body:JSON.stringify(payload)
       }
     );
 
@@ -145,7 +148,8 @@ function enviarLeadIsales(){
 
     track('isales_lead_submit', {
       valor_conta: state.conta,
-      city_region_category: descobrirRegiao()
+      city_region_category: descobrirRegiao(),
+      roof_type: state.tipoTelhado
     });
 
     console.log('Lead enviado para iSales');
