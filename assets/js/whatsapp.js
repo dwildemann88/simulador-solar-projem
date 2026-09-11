@@ -7,7 +7,7 @@ function whats(){
     `Código da simulação: ${state.leadId}\n` +
     `Cidade: ${state.cidade}\n` +
     `Conta informada: ${formatCurrency(state.conta)}\n` +
-    `Perfil: ${state.tipoImovel}\n` +
+    `Tipo de telhado: ${state.tipoTelhado}\n` +
     `Prazo: ${state.prazoCompra}`;
 
   const url =
