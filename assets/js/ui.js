@@ -10,7 +10,7 @@ function trackVisibleStep(id){
   const map = {
     step1: [1, 'bill_range'],
     step2: [2, 'city'],
-    step3: [3, 'property_type'],
+    step3: [3, 'roof_type'],
     step4: [4, 'purchase_timing']
   };
 
