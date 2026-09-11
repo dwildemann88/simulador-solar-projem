@@ -10,7 +10,7 @@ function analyticsConfirmLead(eventId){
     lead_id: state.leadId,
     valor_conta: state.conta,
     regiao: descobrirRegiao(),
-    tipo_imovel: state.tipoImovel,
+    tipo_telhado: state.tipoTelhado,
     prazo_compra: state.prazoCompra,
     preferencia_atendimento: state.preferenciaAtendimento,
     origem: 'simulador_solar'
@@ -27,7 +27,7 @@ function analyticsConfirmLead(eventId){
     content_category: 'Energia Solar',
     valor_conta: state.conta,
     regiao: descobrirRegiao(),
-    tipo_imovel: state.tipoImovel,
+    tipo_telhado: state.tipoTelhado,
     prazo_compra: state.prazoCompra,
     preferencia_atendimento: state.preferenciaAtendimento,
     origem: 'simulador_solar'

@@ -120,15 +120,15 @@
         <div class="step-body">
           <div class="step-copy">
             <p class="eyebrow">Etapa 3 de 4</p>
-            <h1>Qual é o tipo de imóvel?</h1>
-            <p class="lead">Escolha a opção que melhor descreve o local.</p>
+            <h1>Qual é o tipo de telhado?</h1>
+            <p class="lead">Escolha a opção que mais se aproxima da cobertura do imóvel.</p>
           </div>
 
           <div class="option-grid">
-            <button class="option-card" type="button" onclick="selectTipoImovel(this,'Residencial')"><span>Residencial</span></button>
-            <button class="option-card" type="button" onclick="selectTipoImovel(this,'Comercial')"><span>Comercial</span></button>
-            <button class="option-card" type="button" onclick="selectTipoImovel(this,'Rural')"><span>Rural</span></button>
-            <button class="option-card" type="button" onclick="selectTipoImovel(this,'Outro')"><span>Outro</span></button>
+            <button class="option-card" type="button" onclick="selectTipoTelhado(this,'Fibrocimento')"><span>Fibrocimento</span></button>
+            <button class="option-card" type="button" onclick="selectTipoTelhado(this,'Metálico')"><span>Metálico</span></button>
+            <button class="option-card" type="button" onclick="selectTipoTelhado(this,'Telha cerâmica/barro')"><span>Telha cerâmica/barro</span></button>
+            <button class="option-card" type="button" onclick="selectTipoTelhado(this,'Laje')"><span>Laje</span></button>
             <button class="back-btn" type="button" onclick="goBack('step2',32)">Voltar</button>
           </div>
         </div>
@@ -168,7 +168,7 @@
             </div>
 
             <div class="loading-feed">
-              <div class="loading-feed-item is-active" id="loading-feed-1"><strong>Informações recebidas</strong><small>Conta, região e perfil organizados</small></div>
+              <div class="loading-feed-item is-active" id="loading-feed-1"><strong>Informações recebidas</strong><small>Conta, região e telhado organizados</small></div>
               <div class="loading-feed-item is-hidden" id="loading-feed-2"><strong>Perfil preliminar definido</strong><small>Preparando a próxima etapa</small></div>
             </div>
           </div>
@@ -220,7 +220,7 @@
 
           <div class="result-grid">
             <div class="compare-box"><span class="compare-title">Conta informada</span><strong id="resultadoConta">R$ 0,00</strong></div>
-            <div class="compare-box"><span class="compare-title">Perfil</span><strong id="resultadoPerfil">—</strong></div>
+            <div class="compare-box"><span class="compare-title">Tipo de telhado</span><strong id="resultadoPerfil">—</strong></div>
             <div class="compare-box"><span class="compare-title">Momento</span><strong id="resultadoPrazo">—</strong></div>
           </div>
 

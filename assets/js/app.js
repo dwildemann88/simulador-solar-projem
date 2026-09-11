@@ -49,11 +49,12 @@ function irStep3(){
   bar(48);
 }
 
-function selectTipoImovel(el, valor){
-  state.tipoImovel = valor;
+function selectTipoTelhado(el, valor){
+  state.tipoTelhado = valor;
   setActiveCard('#step3 .option-card', el);
 
-  trackStepComplete(3, 'property_type', {
+  trackStepComplete(3, 'roof_type', {
+    roof_type: valor,
     property_type: valor
   });
 
@@ -161,7 +162,7 @@ async function mostrarResultado(buttonElement){
 
   document.getElementById('resultadoStatus').innerText = state.qualificacao;
   document.getElementById('resultadoConta').innerText = formatCurrency(state.conta);
-  document.getElementById('resultadoPerfil').innerText = state.tipoImovel;
+  document.getElementById('resultadoPerfil').innerText = state.tipoTelhado;
   document.getElementById('resultadoPrazo').innerText = state.prazoCompra;
 
   show('resultado');

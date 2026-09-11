@@ -30,7 +30,7 @@ const state = {
 
   conta: 0,
   cidade: '',
-  tipoImovel: '',
+  tipoTelhado: '',
   prazoCompra: '',
 
   nome: '',
@@ -38,7 +38,6 @@ const state = {
 
   // Campos legados preservados para manter compatibilidade com integrações atuais.
   jaFezOrcamento: '',
-  tipoTelhado: '',
   preferenciaAtendimento: 'WhatsApp',
 
   // Não são preenchidos com números estimados sem base técnica suficiente.
