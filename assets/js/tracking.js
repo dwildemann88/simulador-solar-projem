@@ -103,7 +103,7 @@ function trackResultPreview(){
   trackOnce('solar_simulator_result_preview', {
     ...getAnalyticsContext(),
     bill_range: state.conta,
-    property_type: state.tipoImovel,
+    roof_type: state.tipoTelhado,
     purchase_timing: state.prazoCompra,
     city_region_category: typeof descobrirRegiao === 'function' ? descobrirRegiao() : 'Outras regiões'
   });
@@ -117,7 +117,7 @@ function trackWhatsappClick(){
   trackOnce('solar_simulator_whatsapp_click', {
     ...getAnalyticsContext(),
     bill_range: state.conta,
-    property_type: state.tipoImovel,
+    roof_type: state.tipoTelhado,
     purchase_timing: state.prazoCompra,
     city_region_category: typeof descobrirRegiao === 'function' ? descobrirRegiao() : 'Outras regiões'
   });
